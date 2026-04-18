@@ -13,3 +13,15 @@ Resources:
         GenerateStringKey: password
         PasswordLength: 20
         ExcludeCharacters: '"@/\'
+MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: my-rotation-lab-db
+      Engine: mysql
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      MasterUsername: !Sub '{{resolve:secretsmanager:${DBSecret}:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${DBSecret}:SecretString:password}}'
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 0
+      MultiAZ: false

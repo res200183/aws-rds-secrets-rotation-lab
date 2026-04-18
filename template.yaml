@@ -1,4 +1,3 @@
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: RDS MySQL + Secrets Manager + rotation lab
 
@@ -13,7 +12,8 @@ Resources:
         GenerateStringKey: password
         PasswordLength: 20
         ExcludeCharacters: '"@/\'
-MyDB:
+
+  MyDB:
     Type: AWS::RDS::DBInstance
     Properties:
       DBInstanceIdentifier: my-rotation-lab-db
@@ -25,3 +25,24 @@ MyDB:
       PubliclyAccessible: false
       BackupRetentionPeriod: 0
       MultiAZ: false
+
+  RotationLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: rds-secret-rotation
+      Runtime: python3.9
+      Handler: index.lambda_handler
+      Role: arn:aws:iam::123456789012:role/lambda-basic-role
+      Timeout: 30
+      Code:
+        ZipFile: |
+          def lambda_handler(event, context):
+              return "Rotation placeholder"
+
+  SecretRotation:
+    Type: AWS::SecretsManager::RotationSchedule
+    Properties:
+      SecretId: !Ref DBSecret
+      RotationLambdaARN: !GetAtt RotationLambda.Arn
+      RotationRules:
+        AutomaticallyAfterDays: 90

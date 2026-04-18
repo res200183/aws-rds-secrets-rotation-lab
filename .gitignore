@@ -1,0 +1,49 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Env / secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# AWS
+.aws/
+*.credentials
+*.config
+
+# Terraform (если вдруг будешь использовать)
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# CloudFormation
+*.stack.json
+*.stack.yaml
+
+# Node (если добавишь Lambda/скрипты)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (если Lambda на Python)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo

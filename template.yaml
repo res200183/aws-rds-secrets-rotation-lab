@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: RDS MySQL + Secrets Manager + rotation lab
+Transform: AWS::SecretsManager-2024-09-16
+Description: RDS MySQL + Secrets Manager + hosted rotation lab
 
 Resources:
 
@@ -27,12 +28,20 @@ Resources:
       BackupRetentionPeriod: 0
       MultiAZ: false
 
+  DBSecretAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId: !Ref DBSecret
+      TargetId: !Ref MyDB
+      TargetType: AWS::RDS::DBInstance
+
   SecretRotation:
     Type: AWS::SecretsManager::RotationSchedule
+    DependsOn: DBSecretAttachment
     Properties:
       SecretId: !Ref DBSecret
       HostedRotationLambda:
         RotationType: MySQLSingleUser
-        RotationLambdaName: rds-managed-rotation
+        RotationLambdaName: MyRotationLambda
       RotationRules:
         AutomaticallyAfterDays: 90

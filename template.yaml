@@ -1,1 +1,15 @@
 
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RDS MySQL + Secrets Manager + rotation lab
+
+Resources:
+  DBSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: rds-mysql-admin-secret
+      Description: Admin credentials for RDS MySQL
+      GenerateSecretString:
+        SecretStringTemplate: '{"username":"admin"}'
+        GenerateStringKey: password
+        PasswordLength: 20
+        ExcludeCharacters: '"@/\'
